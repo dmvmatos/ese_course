@@ -40,4 +40,44 @@ void main() {
 
 }
 
-/* Add other Implementation File Code Here */
+ReturnValue_e print_statistics(unsigned char *dataset, unsigned char len){
+  ReturnValue_e ReturnValue = NotOk;
+
+  return ReturnValue;
+}
+
+ReturnValue_e print_array(unsigned char *dataset, unsigned char len){
+  ReturnValue_e ReturnValue = NotOk;
+
+  return ReturnValue;
+}
+
+unsigned char find_median(unsigned char *dataset, unsigned char len){
+  unsigned char median = 0;
+
+  return median;
+}
+
+unsigned char find_mean(unsigned char *dataset, unsigned char len){
+  unsigned char mean = 0;
+
+  return mean;
+}
+
+unsigned char find_maximum(unsigned char *dataset, unsigned char len){
+  unsigned char maximum = 0;
+
+  return maximum;
+}
+
+unsigned char find_minimum(unsigned char *dataset, unsigned char len){
+  unsigned char minimum = 0;
+
+  return minimum;
+}
+
+ReturnValue_e sort_array(unsigned char *dataset, unsigned char len){
+  ReturnValue_e ReturnValue = NotOk;
+
+  return ReturnValue;
+}
