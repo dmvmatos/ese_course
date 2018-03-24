@@ -1,7 +1,7 @@
 /* 
 
 Author: Diogo Matos
-Project: Assessment 1 
-Description - Array sort software, with analytics report (maximum, minimum, mean, and median of the provided array)
+Project: Assessment 2
+Description - Makefile creation for a SW which modifies memory contents (it shakk work cross and native)
 
 */
