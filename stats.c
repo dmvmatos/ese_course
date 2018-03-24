@@ -9,13 +9,14 @@
  *
  *****************************************************************************/
 /**
- * @file <Add File Name> 
- * @brief <Add Brief Description Here >
+ * @file stats.c 
+ * @brief Coursera - Assessment 1
  *
- * <Add Extended Description Here>
+ * Functions implementation, which sort and print statistics of a provided dataset
+ * (Implemented sort algorithm inspired in Buble sort)
  *
- * @author <Add FirsName LastName>
- * @date <Add date >
+ * @author Diogo Matos
+ * @date 11 March 2018
  *
  */
 
@@ -38,46 +39,164 @@ void main() {
   /* Other Variable Declarations Go Here */
   /* Statistics and Printing Functions Go Here */
 
+  
+  printf("\n");
+  printf("######## Coursera - Assessment 1 ########");
+  printf("\n");
+  printf("\n");
+
+  printf("Unsorted Data set: \n");
+  print_array(test, SIZE);
+
+  printf("\n");
+  
+  printf("Data set statistics: \n");
+  print_statistics(test, SIZE);
+  
+  printf("\n");
+  printf("\n");
+  
+  sort_array(test, SIZE);~
+  printf("Sorted data set  : \n");
+  print_array(test, SIZE);
+  
+  printf("\n");
+  
+  printf("Data set statistics: \n");
+  print_statistics(test, SIZE);
+
 }
 
 ReturnValue_e print_statistics(unsigned char *dataset, unsigned char len){
   ReturnValue_e ReturnValue = NotOk;
+  unsigned char maximum = 0;
+  unsigned char minimum = 0;
+  unsigned char mean = 0;
+  unsigned char median = 0;
 
-  return ReturnValue;
+  maximum = find_maximum(dataset, SIZE);
+  printf("Maximum value: %d \n",  maximum);
+
+  minimum = find_minimum(dataset, SIZE);
+  printf("Minimum value: %d \n",  minimum);
+
+  mean = find_mean(dataset, SIZE);
+  printf("Mean value   : %d \n",  mean);
+
+  median = find_median(dataset, SIZE);
+  printf("Median value : %d \n",  median);
+
+  return Ok;
 }
 
 ReturnValue_e print_array(unsigned char *dataset, unsigned char len){
   ReturnValue_e ReturnValue = NotOk;
+  int i;
 
+  //printf("-> print_array \n");
+
+  if(dataset!=NULL && len!=0){
+    for (i=0; i < len; i++){
+      printf("%d ", *dataset);
+      dataset++;
+      }
+      ReturnValue = Ok;
+  }
+  
+  printf("\n");
   return ReturnValue;
 }
 
 unsigned char find_median(unsigned char *dataset, unsigned char len){
   unsigned char median = 0;
+  unsigned char median_pos = len/2;
+
+  median = *(dataset+median_pos-1);
 
   return median;
 }
 
 unsigned char find_mean(unsigned char *dataset, unsigned char len){
-  unsigned char mean = 0;
+  float mean = 0.0;
+  float sum = 0.0;
+  int i;
 
-  return mean;
+  //printf("-> find_mean \n");
+
+  if(dataset!=NULL && len!=0){
+    for (i=0; i < len; i++){
+      sum = sum + *dataset;
+      dataset++;
+    }
+    mean = sum/len;
+  }
+
+  return (unsigned char)mean;
 }
 
 unsigned char find_maximum(unsigned char *dataset, unsigned char len){
-  unsigned char maximum = 0;
+  int i;
+  unsigned char tmp=*dataset;
 
-  return maximum;
+  //printf("-> find_maximum \n");
+
+  if(dataset!=NULL && len!=0){
+    for (i=0; i < len; i++){
+      if(tmp<*dataset){
+        tmp=*dataset;
+      }
+      dataset++;
+      }
+  }
+
+  return tmp;
 }
 
 unsigned char find_minimum(unsigned char *dataset, unsigned char len){
-  unsigned char minimum = 0;
+  int i;
+  unsigned char tmp=*dataset;
 
-  return minimum;
+  //printf("-> find_minimum \n");
+
+  if(dataset!=NULL && len!=0){
+    for (i=0; i < len; i++){
+      if(tmp>*dataset){
+        tmp=*dataset;
+      }
+      dataset++;
+      }
+  }
+
+  return tmp;
 }
 
 ReturnValue_e sort_array(unsigned char *dataset, unsigned char len){
   ReturnValue_e ReturnValue = NotOk;
+  int i,j;
+  unsigned char *tmp=dataset+len-1;
+
+  //printf("-> sort_array \n");
+
+  if(dataset!=NULL && len!=0){
+    for (i=(len-1); i >= 0; i--){
+      for (j=(len-2); j >= (len-i-1); j--){
+        if (*tmp > *(tmp-1)){
+          swap(tmp, tmp-1);
+        }
+        tmp--;
+      }
+      tmp=dataset+len-1;
+    }
+    ReturnValue = Ok;
+  }
 
   return ReturnValue;
 }
+
+void swap(unsigned char *xp, unsigned char *yp)
+{
+    unsigned char temp = *xp;
+    *xp = *yp;
+    *yp = temp;
+}
+

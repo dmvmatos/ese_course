@@ -9,32 +9,18 @@
  *
  *****************************************************************************/
 /**
- * @file <Add File Name> 
- * @brief <Add Brief Description Here >
+ * @file stats.h 
+ * @brief Header file of Stats.c
  *
- * <Add Extended Description Here>
  *
- * @author <Add FirsName LastName>
- * @date <Add date >
+ * @author Diogo Matos
+ * @date 11/03/2018
  *
  */
 #ifndef __STATS_H__
 #define __STATS_H__
 
 /* Add Your Declarations and Function Comments here */ 
-
-/**
- * @brief <Add Brief Description of Function Here>
- *
- * <Add Extended Description Here>
- *
- * @param <Add InputName> <add description here>
- * @param <Add InputName> <add description here>
- * @param <Add InputName> <add description here>
- * @param <Add InputName> <add description here>
- *
- * @return <Add Return Informaiton here>
- */
 
 typedef enum Return{
     Ok = 0,
@@ -127,4 +113,15 @@ unsigned char find_minimum(unsigned char *dataset, unsigned char len);
  */
 ReturnValue_e sort_array(unsigned char *dataset, unsigned char len);
 
+/**
+ * @brief Swap 2 the content of provided pointers
+ *
+ * @param xp Pointer to a data
+ * @param yp Pointer to a data
+ *
+ * @return void
+ */
+void swap(unsigned char *xp, unsigned char *yp);
+
 #endif /* __STATS_H__ */
+
