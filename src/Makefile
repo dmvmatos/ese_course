@@ -69,7 +69,6 @@ ASFLAGS = -S -D$(PLATFORM)
 
 %.asm : %.c
 	$(CC) $(ASFLAGS) -o $*.asm $*.c
-	#Check what can be done with objump
 
 %.o : %.c
 	$(CC) -c $< $(CFLAGS) -o $*.o
@@ -86,6 +85,7 @@ build: $(TARGET).out
 $(TARGET).out: $(OBJS)
 	$(CC) $(OBJS) $(CFLAGS) $(LDFLAGS) -o $@
 	$(SIZE-TOOL) -Atd $@
+	#objdump -S $@
 
 
 CPPS = $(SOURCES:.c=.i)
@@ -94,14 +94,9 @@ DEPS = $(SOURCES:.c=.d)
 
 clean:
 	rm -f $(OBJS) $(TARGET).out $(TARGET).map
-	rm -f $(CPPS) $(ASS)
+	rm -f $(CPPS) $(ASS) $(DEPS)
 
 -include $(SOURCES:%.c=%.dep)
 
-#Compilar preprocessor main.i
-#gcc -E -o main.i main.c -DHOST
-
 #http://www.microhowto.info/howto/automatically_generate_makefile_dependencies.html
 #https://bruno.defraine.net/techtips/makefile-auto-dependencies-with-gcc/
-#$(CC) -MM $(CFLAGS) -o $*.dep $*.c
-#
