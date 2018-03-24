@@ -10,15 +10,22 @@
 #*****************************************************************************
 
 #------------------------------------------------------------------------------
-# <Put a Description Here>
+# Makefile for the m2 assesment
 #
 # Use: make [TARGET] [PLATFORM-OVERRIDES]
 #
 # Build Targets:
-#      <Put a description of the supported targets here>
+#      <FILE>.i - Builds <FILE>.i preprocessed file
+#      <FILE>.asm - Builds <FILE>.asm assembly file
+#      <FILE>.o - Builds <FILE>.o object file
+#      compile-all - Builds all source files
+#      build - Builds and links all source files
+#      clean - removes all generated files
 #
 # Platform Overrides:
-#      <Put a description of the supported Overrides here
+#      CPU - ARM Cortex Architecture (cortex-m4)
+#      ARCH - ARM Architecture (armv7e-m)
+#      SPECS - Specs file to give the linker (nosys.specs)
 #
 #------------------------------------------------------------------------------
 include sources.mk
@@ -32,23 +39,28 @@ LINKER_FILE = ../msp432p401r.lds
 # Architectures Specific Flags
 CPU = cortex-m4
 ARCH = thumb
+MARCH = armv7e-m
+MFLOAT = hard
+MFPU = fpv4-sp-d16
 SPECS = nosys.specs
 
-ifeq ($(PLATFORM),HOST)
-	CC = gcc
-	SIZE-TOOL = size
-else
+ifeq ($(PLATFORM),MSP432)
 	CC = arm-none-eabi-gcc
 	LD = arm-none-eabi-ld
-	SIZE-TOOL =
+	SIZE-TOOL = arm-none-eabi-size
+        LDFLAGS = -T $(LINKER_FILE)
+        CFLAGS = -mcpu=$(CPU) -m$(ARCH) -march=$(MARCH) -mfloat-abi=$(MFLOAT) -mfpu=$(MFPU) --specs=$(SPECS)
+else
+	CC = gcc
+	SIZE-TOOL = size
 endif
 
 #Executable output file
 TARGET = c1m2
 
 # Compiler Flags
-LDFLAGS = -Wl,-Map=$(TARGET).map -T $(LINKER_FILE)
-CFLAGS = -Wall -D$(PLATFORM)
+LDFLAGS += -Wl,-Map=$(TARGET).map
+CFLAGS += -Wall -Werror -g -O0 -std=c99 -D$(PLATFORM)
 CPPFLAGS = -E -MD -MP -D$(PLATFORM)
 ASFLAGS = -S -D$(PLATFORM)
 
@@ -78,6 +90,7 @@ $(TARGET).out: $(OBJS)
 
 CPPS = $(SOURCES:.c=.i)
 ASS = $(SOURCES:.c=.asm)
+DEPS = $(SOURCES:.c=.d)
 
 clean:
 	rm -f $(OBJS) $(TARGET).out $(TARGET).map
@@ -91,3 +104,4 @@ clean:
 #http://www.microhowto.info/howto/automatically_generate_makefile_dependencies.html
 #https://bruno.defraine.net/techtips/makefile-auto-dependencies-with-gcc/
 #$(CC) -MM $(CFLAGS) -o $*.dep $*.c
+#

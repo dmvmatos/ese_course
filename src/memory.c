@@ -20,7 +20,7 @@
  * @date April 1 2017
  *
  */
-#include "memory.h"
+#include "../include/common/memory.h"
 
 /***********************************************************
  Function Definitions
