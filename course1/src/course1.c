@@ -9,194 +9,342 @@
  *
  *****************************************************************************/
 /**
- * @file stats.c 
- * @brief Coursera - Assessment 1
+ * @file course1.c 
+ * @brief This file is to be used to course 1 final assessment.
  *
- * Functions implementation, which sort and print statistics of a provided dataset
- * (Implemented sort algorithm inspired in Buble sort)
- *
- * @author Diogo Matos
- * @date 11 March 2018
+ * @author Alex Fosdick
+ * @date April 2, 2017
  *
  */
 
+#include <stdint.h>
+#include "../include/common/course1.h"
+#include "../include/common/platform.h"
+#include "../include/common/memory.h"
+#include "../include/common/data.h"
+#include "../include/common/stats.h"
 
+int8_t test_data1() {
+  uint8_t * ptr;
+  int32_t num = -4096;
+  uint32_t digits;
+  int32_t value;
 
-#include <stdio.h>
-#include "stats.h"
+  PRINTF("\ntest_data1();\n");
+  ptr = (uint8_t*) reserve_words( DATA_SET_SIZE_W );
 
-/* Size of the Data Set */
-#define SIZE (40)
+  if (! ptr )
+  {
+    return TEST_ERROR;
+  }
 
-void main() {
+  digits = my_itoa( num, ptr, BASE_16);   
+  value = my_atoi( ptr, digits, BASE_16);
+  #ifdef VERBOSE
+  PRINTF("  Initial number: %d\n", num);
+  PRINTF("  Final Decimal number: %d\n", value);
+  #endif
+  free_words( (int32_t*)ptr );
 
-  unsigned char test[SIZE] = { 34, 201, 190, 154,   8, 194,   2,   6,
-                              114, 88,   45,  76, 123,  87,  25,  23,
-                              200, 122, 150, 90,   92,  87, 177, 244,
-                              201,   6,  12,  60,   8,   2,   5,  67,
-                                7,  87, 250, 230,  99,   3, 100,  90};
-
-  /* Other Variable Declarations Go Here */
-  /* Statistics and Printing Functions Go Here */
-
-  
-  printf("\n");
-  printf("######## Coursera - Assessment 1 ########");
-  printf("\n");
-  printf("\n");
-
-  printf("Unsorted Data set: \n");
-  print_array(test, SIZE);
-
-  printf("\n");
-  
-  printf("Data set statistics: \n");
-  print_statistics(test, SIZE);
-  
-  printf("\n");
-  printf("\n");
-  
-  sort_array(test, SIZE);~
-  printf("Sorted data set  : \n");
-  print_array(test, SIZE);
-  
-  printf("\n");
-  
-  printf("Data set statistics: \n");
-  print_statistics(test, SIZE);
-
+  if ( value != num )
+  {
+    return TEST_ERROR;
+  }
+  return TEST_NO_ERROR;
 }
 
-ReturnValue_e print_statistics(unsigned char *dataset, unsigned char len){
-  ReturnValue_e ReturnValue = NotOk;
-  unsigned char maximum = 0;
-  unsigned char minimum = 0;
-  unsigned char mean = 0;
-  unsigned char median = 0;
+int8_t test_data2() {
+  uint8_t * ptr;
+  int32_t num = 123456;
+  uint32_t digits;
+  int32_t value;
 
-  maximum = find_maximum(dataset, SIZE);
-  printf("Maximum value: %d \n",  maximum);
+  PRINTF("test_data2():\n");
+  ptr = (uint8_t*) reserve_words( DATA_SET_SIZE_W );
 
-  minimum = find_minimum(dataset, SIZE);
-  printf("Minimum value: %d \n",  minimum);
+  if (! ptr )
+  {
+    return TEST_ERROR;
+  }
 
-  mean = find_mean(dataset, SIZE);
-  printf("Mean value   : %d \n",  mean);
+  digits = my_itoa( num, ptr, BASE_10);
+  value = my_atoi( ptr, digits, BASE_10);
+  #ifdef VERBOSE
+  PRINTF("  Initial Decimal number: %d\n", num);
+  PRINTF("  Final Decimal number: %d\n", value);
+  #endif
+  free_words( (int32_t*)ptr );
 
-  median = find_median(dataset, SIZE);
-  printf("Median value : %d \n",  median);
-
-  return Ok;
+  if ( value != num )
+  {
+    return TEST_ERROR;
+  }
+  return TEST_NO_ERROR;
 }
 
-ReturnValue_e print_array(unsigned char *dataset, unsigned char len){
-  ReturnValue_e ReturnValue = NotOk;
-  int i;
+int8_t test_memmove1() {
+  uint8_t i;
+  int8_t ret = TEST_NO_ERROR;
+  uint8_t * set;
+  uint8_t * ptra;
+  uint8_t * ptrb;
 
-  //printf("-> print_array \n");
+  PRINTF("test_memmove1() - NO OVERLAP\n");
+  set = (uint8_t*) reserve_words( MEM_SET_SIZE_W );
 
-  if(dataset!=NULL && len!=0){
-    for (i=0; i < len; i++){
-      printf("%d ", *dataset);
-      dataset++;
-      }
-      ReturnValue = Ok;
+  if (! set ) 
+  {
+    return TEST_ERROR;
   }
   
-  printf("\n");
-  return ReturnValue;
-}
+  ptra = &set[0];
+  ptrb = &set[16];
+  
+  /* Initialize the set to test values */
+  for( i = 0; i < MEM_SET_SIZE_B; i++)
+  {
+    set[i] = i;
+  }
 
-unsigned char find_median(unsigned char *dataset, unsigned char len){
-  unsigned char median = 0;
-  unsigned char median_pos = len/2;
+  print_array(set, MEM_SET_SIZE_B);
+  my_memmove(ptra, ptrb, TEST_MEMMOVE_LENGTH);
+  print_array(set, MEM_SET_SIZE_B);
 
-  median = *(dataset+median_pos-1);
-
-  return median;
-}
-
-unsigned char find_mean(unsigned char *dataset, unsigned char len){
-  float mean = 0.0;
-  float sum = 0.0;
-  int i;
-
-  //printf("-> find_mean \n");
-
-  if(dataset!=NULL && len!=0){
-    for (i=0; i < len; i++){
-      sum = sum + *dataset;
-      dataset++;
+  for (i = 0; i < TEST_MEMMOVE_LENGTH; i++)
+  {
+    if (set[i + 16] != i)
+    {
+      ret = TEST_ERROR;
     }
-    mean = sum/len;
   }
 
-  return (unsigned char)mean;
+  free_words( (int32_t*)set );
+  return ret;
 }
 
-unsigned char find_maximum(unsigned char *dataset, unsigned char len){
-  int i;
-  unsigned char tmp=*dataset;
+int8_t test_memmove2() {
+  uint8_t i;
+  int8_t ret = TEST_NO_ERROR;
+  uint8_t * set;
+  uint8_t * ptra;
+  uint8_t * ptrb;
 
-  //printf("-> find_maximum \n");
+  PRINTF("test_memmove2() -OVERLAP END OF SRC BEGINNING OF DST\n");
+  set = (uint8_t*) reserve_words(MEM_SET_SIZE_W);
 
-  if(dataset!=NULL && len!=0){
-    for (i=0; i < len; i++){
-      if(tmp<*dataset){
-        tmp=*dataset;
-      }
-      dataset++;
-      }
+  if (! set )
+  {
+    return TEST_ERROR;
+  }
+  ptra = &set[0];
+  ptrb = &set[8];
+
+  /* Initialize the set to test values */
+  for( i = 0; i < MEM_SET_SIZE_B; i++) {
+    set[i] = i;
   }
 
-  return tmp;
-}
+  print_array(set, MEM_SET_SIZE_B);
+  my_memmove(ptra, ptrb, TEST_MEMMOVE_LENGTH);
+  print_array(set, MEM_SET_SIZE_B);
 
-unsigned char find_minimum(unsigned char *dataset, unsigned char len){
-  int i;
-  unsigned char tmp=*dataset;
-
-  //printf("-> find_minimum \n");
-
-  if(dataset!=NULL && len!=0){
-    for (i=0; i < len; i++){
-      if(tmp>*dataset){
-        tmp=*dataset;
-      }
-      dataset++;
-      }
-  }
-
-  return tmp;
-}
-
-ReturnValue_e sort_array(unsigned char *dataset, unsigned char len){
-  ReturnValue_e ReturnValue = NotOk;
-  int i,j;
-  unsigned char *tmp=dataset+len-1;
-
-  //printf("-> sort_array \n");
-
-  if(dataset!=NULL && len!=0){
-    for (i=(len-1); i >= 0; i--){
-      for (j=(len-2); j >= (len-i-1); j--){
-        if (*tmp > *(tmp-1)){
-          swap(tmp, tmp-1);
-        }
-        tmp--;
-      }
-      tmp=dataset+len-1;
+  for (i = 0; i < TEST_MEMMOVE_LENGTH; i++)
+  {
+    if (set[i + 8] != i)
+    {
+      ret = TEST_ERROR;
     }
-    ReturnValue = Ok;
   }
 
-  return ReturnValue;
+  free_words( (int32_t*)set );
+  return ret;
 }
 
-void swap(unsigned char *xp, unsigned char *yp)
+int8_t test_memmove3() {
+  uint8_t i;
+  int8_t ret = TEST_NO_ERROR;
+  uint8_t * set;
+  uint8_t * ptra;
+  uint8_t * ptrb;
+
+  PRINTF("test_memove3() - OVERLAP END OF DEST BEGINNING OF SRC\n");
+  set = (uint8_t*)reserve_words( MEM_SET_SIZE_W);
+
+  if (! set ) 
+  {
+    return TEST_ERROR;
+  }
+  ptra = &set[8];
+  ptrb = &set[0];
+
+  /* Initialize the set to test values */
+  for( i = 0; i < MEM_SET_SIZE_B; i++)
+  {
+    set[i] = i;
+  }
+
+  print_array(set, MEM_SET_SIZE_B);
+  my_memmove(ptra, ptrb, TEST_MEMMOVE_LENGTH);
+  print_array(set, MEM_SET_SIZE_B);
+
+  for (i = 0; i < TEST_MEMMOVE_LENGTH; i++)
+  {
+    if (set[i] != (i + 8))
+    {
+      ret = TEST_ERROR;
+    }
+  }
+
+
+  free_words( (int32_t*)set );
+  return ret;
+
+}
+
+int8_t test_memcopy() {
+  uint8_t i;
+  int8_t ret = TEST_NO_ERROR;
+  uint8_t * set;
+  uint8_t * ptra;
+  uint8_t * ptrb;
+
+  PRINTF("test_memcopy()\n");
+  set = (uint8_t*) reserve_words(MEM_SET_SIZE_W);
+
+  if (! set ) 
+  {
+    return TEST_ERROR;
+  }
+  ptra = &set[0];
+  ptrb = &set[16];
+
+  /* Initialize the set to test values */
+  for( i = 0; i < MEM_SET_SIZE_B; i++) {
+    set[i] = i;
+  }
+
+  print_array(set, MEM_SET_SIZE_B);
+  my_memcopy(ptra, ptrb, TEST_MEMMOVE_LENGTH);
+  print_array(set, MEM_SET_SIZE_B);
+
+  for (i = 0; i < TEST_MEMMOVE_LENGTH; i++)
+  {
+    if (set[i+16] != i)
+    {
+      ret = TEST_ERROR;
+    }
+  }
+
+  free_words( (int32_t*)set );
+  return ret;
+}
+
+int8_t test_memset() 
 {
-    unsigned char temp = *xp;
-    *xp = *yp;
-    *yp = temp;
+  uint8_t i;
+  uint8_t ret = TEST_NO_ERROR;
+  uint8_t * set;
+  uint8_t * ptra;
+  uint8_t * ptrb;
+
+  PRINTF("test_memset()\n");
+  set = (uint8_t*)reserve_words(MEM_SET_SIZE_W);
+  if (! set )
+  {
+    return TEST_ERROR;
+  }
+  ptra = &set[0];
+  ptrb = &set[16];
+
+  /* Initialize the set to test values */
+  for( i = 0; i < MEM_SET_SIZE_B; i++) 
+  {
+    set[i] = i;
+  }
+
+  print_array(set, MEM_SET_SIZE_B);
+  my_memset(ptra, MEM_SET_SIZE_B, 0xFF);
+  print_array(set, MEM_SET_SIZE_B);
+  my_memzero(ptrb, MEM_ZERO_LENGTH);
+  print_array(set, MEM_SET_SIZE_B);
+  
+  /* Validate Set & Zero Functionality */
+  for (i = 0; i < MEM_ZERO_LENGTH; i++)
+  {
+    if (set[i] != 0xFF)
+    {
+      ret = TEST_ERROR;
+    }
+    if (set[16 + i] != 0)
+    {
+      ret = TEST_ERROR;
+    }
+  }
+  
+  free_words( (int32_t*)set );
+  return ret;
 }
 
+int8_t test_reverse()
+{
+  uint8_t i;
+  int8_t ret = TEST_NO_ERROR;
+  uint8_t * copy;
+  uint8_t set[MEM_SET_SIZE_B] = {0x3F, 0x73, 0x72, 0x33, 0x54, 0x43, 0x72, 0x26,
+                                 0x48, 0x63, 0x20, 0x66, 0x6F, 0x00, 0x20, 0x33,
+                                 0x72, 0x75, 0x74, 0x78, 0x21, 0x4D, 0x20, 0x40,
+                                 0x20, 0x24, 0x7C, 0x20, 0x24, 0x69, 0x68, 0x54
+                               };
+
+  PRINTF("test_reverse()\n");
+  copy = (uint8_t*)reserve_words(MEM_SET_SIZE_W);
+  if (! copy )
+  {
+    return TEST_ERROR;
+  }
+  
+  my_memcopy(set, copy, MEM_SET_SIZE_B);
+
+  print_array(set, MEM_SET_SIZE_B);
+  my_reverse(set, MEM_SET_SIZE_B);
+  print_array(set, MEM_SET_SIZE_B);
+
+  for (i = 0; i < MEM_SET_SIZE_B; i++)
+  {
+    if (set[i] != copy[MEM_SET_SIZE_B - i - 1])
+    {
+      ret = TEST_ERROR;
+    }
+  }
+
+  free_words( (int32_t*)copy );
+  return ret;
+}
+
+void course1(void) 
+{
+  uint8_t i;
+  int8_t failed = 0;
+  int8_t results[TESTCOUNT];
+
+  results[0] = test_data1();
+  results[1] = test_data2();
+  results[2] = test_memmove1();
+  results[3] = test_memmove2();
+  results[4] = test_memmove3();
+  results[5] = test_memcopy();
+  results[6] = test_memset();
+  results[7] = test_reverse();
+
+  for ( i = 0; i < TESTCOUNT; i++) 
+  {
+    failed += results[i];
+    PRINTF("Test %d result: %d \n", i, results[i]);
+  }
+
+  PRINTF("--------------------------------\n");
+  PRINTF("Test Results:\n");
+  PRINTF("  PASSED: %d / %d\n", (TESTCOUNT - failed), TESTCOUNT);
+  PRINTF("  FAILED: %d / %d\n", failed, TESTCOUNT);
+  PRINTF("--------------------------------\n");
+}

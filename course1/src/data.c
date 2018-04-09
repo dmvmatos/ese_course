@@ -9,194 +9,127 @@
  *
  *****************************************************************************/
 /**
- * @file stats.c 
- * @brief Coursera - Assessment 1
+ * @file data.c 
+ * @brief Coursera - Course 1
  *
- * Functions implementation, which sort and print statistics of a provided dataset
- * (Implemented sort algorithm inspired in Buble sort)
+ * Functions implementation, to do some very basic data manipulation.
  *
  * @author Diogo Matos
- * @date 11 March 2018
+ * @date 09 April 2018
  *
  */
 
+#include "../include/common/data.h"
 
+uint8_t my_itoa(int32_t data, uint8_t * ptr, uint32_t base){
+  int i = 0;
+  bool negativeValue = false;
 
-#include <stdio.h>
-#include "stats.h"
-
-/* Size of the Data Set */
-#define SIZE (40)
-
-void main() {
-
-  unsigned char test[SIZE] = { 34, 201, 190, 154,   8, 194,   2,   6,
-                              114, 88,   45,  76, 123,  87,  25,  23,
-                              200, 122, 150, 90,   92,  87, 177, 244,
-                              201,   6,  12,  60,   8,   2,   5,  67,
-                                7,  87, 250, 230,  99,   3, 100,  90};
-
-  /* Other Variable Declarations Go Here */
-  /* Statistics and Printing Functions Go Here */
-
-  
-  printf("\n");
-  printf("######## Coursera - Assessment 1 ########");
-  printf("\n");
-  printf("\n");
-
-  printf("Unsorted Data set: \n");
-  print_array(test, SIZE);
-
-  printf("\n");
-  
-  printf("Data set statistics: \n");
-  print_statistics(test, SIZE);
-  
-  printf("\n");
-  printf("\n");
-  
-  sort_array(test, SIZE);~
-  printf("Sorted data set  : \n");
-  print_array(test, SIZE);
-  
-  printf("\n");
-  
-  printf("Data set statistics: \n");
-  print_statistics(test, SIZE);
-
-}
-
-ReturnValue_e print_statistics(unsigned char *dataset, unsigned char len){
-  ReturnValue_e ReturnValue = NotOk;
-  unsigned char maximum = 0;
-  unsigned char minimum = 0;
-  unsigned char mean = 0;
-  unsigned char median = 0;
-
-  maximum = find_maximum(dataset, SIZE);
-  printf("Maximum value: %d \n",  maximum);
-
-  minimum = find_minimum(dataset, SIZE);
-  printf("Minimum value: %d \n",  minimum);
-
-  mean = find_mean(dataset, SIZE);
-  printf("Mean value   : %d \n",  mean);
-
-  median = find_median(dataset, SIZE);
-  printf("Median value : %d \n",  median);
-
-  return Ok;
-}
-
-ReturnValue_e print_array(unsigned char *dataset, unsigned char len){
-  ReturnValue_e ReturnValue = NotOk;
-  int i;
-
-  //printf("-> print_array \n");
-
-  if(dataset!=NULL && len!=0){
-    for (i=0; i < len; i++){
-      printf("%d ", *dataset);
-      dataset++;
+  if(ptr==NULL || base<2 || base>16 || data>4294967295){
+    /*Pointer to array in NULL*/
+    /*or*/
+    /*Base value provided is invalid*/
+    /*or*/
+    /*Data is overflowed*/
+    i=0;   
+  }else{     
+    /*All provided values seems to be valid*/
+    if (data==0){
+      /*Integer value is zero*/
+      *ptr = '0';
+      i++;
+      *(++ptr) = '\0';
+      i++;
+    }else{
+      /*Integer value is different than zero*/
+      /*Checking is value provided is negative and decimal base*/
+      if (data<0){
+        negativeValue = true;
+        /*remove negative sign*/
+        data=-data;
       }
-      ReturnValue = Ok;
-  }
-  
-  printf("\n");
-  return ReturnValue;
-}
-
-unsigned char find_median(unsigned char *dataset, unsigned char len){
-  unsigned char median = 0;
-  unsigned char median_pos = len/2;
-
-  median = *(dataset+median_pos-1);
-
-  return median;
-}
-
-unsigned char find_mean(unsigned char *dataset, unsigned char len){
-  float mean = 0.0;
-  float sum = 0.0;
-  int i;
-
-  //printf("-> find_mean \n");
-
-  if(dataset!=NULL && len!=0){
-    for (i=0; i < len; i++){
-      sum = sum + *dataset;
-      dataset++;
-    }
-    mean = sum/len;
-  }
-
-  return (unsigned char)mean;
-}
-
-unsigned char find_maximum(unsigned char *dataset, unsigned char len){
-  int i;
-  unsigned char tmp=*dataset;
-
-  //printf("-> find_maximum \n");
-
-  if(dataset!=NULL && len!=0){
-    for (i=0; i < len; i++){
-      if(tmp<*dataset){
-        tmp=*dataset;
-      }
-      dataset++;
-      }
-  }
-
-  return tmp;
-}
-
-unsigned char find_minimum(unsigned char *dataset, unsigned char len){
-  int i;
-  unsigned char tmp=*dataset;
-
-  //printf("-> find_minimum \n");
-
-  if(dataset!=NULL && len!=0){
-    for (i=0; i < len; i++){
-      if(tmp>*dataset){
-        tmp=*dataset;
-      }
-      dataset++;
-      }
-  }
-
-  return tmp;
-}
-
-ReturnValue_e sort_array(unsigned char *dataset, unsigned char len){
-  ReturnValue_e ReturnValue = NotOk;
-  int i,j;
-  unsigned char *tmp=dataset+len-1;
-
-  //printf("-> sort_array \n");
-
-  if(dataset!=NULL && len!=0){
-    for (i=(len-1); i >= 0; i--){
-      for (j=(len-2); j >= (len-i-1); j--){
-        if (*tmp > *(tmp-1)){
-          swap(tmp, tmp-1);
+      
+      /*Convert the integer value in provided base*/
+      while (data!=0){
+        int remainderValue = data % base;
+        if(remainderValue>9){
+          /*special handling for hex values bigger than 9*/
+          *(++ptr)=(remainderValue-10)+'a';
+        }else{
+          *(++ptr)=remainderValue+'0';
         }
-        tmp--;
+
+        /*incerment iterator*/
+        i++;
+
+        /*calculate next 'bit'*/
+        data = data/base;
       }
-      tmp=dataset+len-1;
+
+      /*If number is negative, append '-'*/
+      if (negativeValue){
+        *(++ptr) = '-';
+        i++;
+      }
+
+      /*Append string terminator*/
+      *(++ptr) = '\0';
+      i++;
+
+      /* Reverse the string*/
+      my_reverse(ptr-i,i);
     }
-    ReturnValue = Ok;
   }
-
-  return ReturnValue;
+  
+  return i;
 }
 
-void swap(unsigned char *xp, unsigned char *yp)
-{
-    unsigned char temp = *xp;
-    *xp = *yp;
-    *yp = temp;
-}
+int32_t my_atoi(uint8_t * ptr, uint8_t digits, uint32_t base){
+  int32_t integerValue=0;
+  uint32_t value=0;
+  double power=1;
+  bool negativeValue=false;
 
+  if (ptr==NULL || digits<1 || digits>33 || base<2 || base>16){
+    /*Pointer to array in NULL*/
+    /*or*/
+    /*Digits value is invalid */
+    /*or*/
+    /*Base value provided is invalid*/
+    integerValue=0;
+  }else{
+    if(*ptr=='-'){
+      /*String is a ASCII representation of a negative value*/
+      negativeValue=true;
+      ptr++;
+      digits--;
+    }
+
+    /*Discounts string null termination*/
+    digits--;
+
+    /*Calculate the power valuer for the base conversion, starting from the highest weight*/
+    power=pow(base,digits-1);
+
+    /*Check each element of array and converts the same to integer, based on provided base*/
+    while(digits>0){ 
+      if(*ptr>='0' && *ptr<='9'){
+        value=*ptr-'0';
+      }else{
+        value=*ptr-'a'+10;
+      }
+
+      integerValue=integerValue+value*power;
+      power=power/base;
+
+      digits--;
+      ptr++;
+    }
+
+    /*Apply the signal in case of negative value*/
+    if(negativeValue==true){
+      integerValue=-1*integerValue;
+    }
+  }
+  return integerValue;
+}

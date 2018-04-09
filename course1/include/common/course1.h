@@ -9,119 +9,126 @@
  *
  *****************************************************************************/
 /**
- * @file stats.h 
- * @brief Header file of Stats.c
+ * @file course1.h 
+ * @brief This file is to be used to course 1 final assessment.
  *
- *
- * @author Diogo Matos
- * @date 11/03/2018
+ * @author Alex Fosdick
+ * @date April 2, 2017
  *
  */
-#ifndef __STATS_H__
-#define __STATS_H__
+#ifndef __COURSE1_H__
+#define __COURSE1_H__
 
-/* Add Your Declarations and Function Comments here */ 
+#include <stdint.h>
 
-typedef enum Return{
-    Ok = 0,
-    NotOk = 1
-}ReturnValue_e;
+#define DATA_SET_SIZE_W (10)
+#define MEM_SET_SIZE_B  (32)
+#define MEM_SET_SIZE_W  (8)
+#define MEM_ZERO_LENGTH (16)
 
+#define TEST_MEMMOVE_LENGTH (16)
+#define TEST_ERROR          (1)
+#define TEST_NO_ERROR       (0)
+#define TESTCOUNT           (8)
 
-/**
- * @brief A function that prints the statistics of an array
- *
- * Prints the statistics of an array including minimum, maximum, mean, and median.
- *
- * @param dataset Input data vector
- * @param len Nr of element of data vector
- *
- * @return General return information (Ok, Not Ok)
- */
-ReturnValue_e print_statistics(unsigned char *dataset, unsigned char len);
+#define BASE_16     (16)
+#define BASE_10     (10)
 
 /**
- * @brief Prints the array to the screen
- *
- * Given an array of data and a length, prints the array to the screen
- *
- * @param dataset Input data vector
- * @param len Nr of element of data vector
- *
- * @return General return information (Ok, Not Ok)
- */
-ReturnValue_e print_array(unsigned char *dataset, unsigned char len);
-
-/**
- * @brief Calculates the median value
- *
- * Given an array of data and a length, returns the median value
- *
- * @param dataset Input data vector
- * @param len Nr of element of data vector
- *
- * @return The median value
- */
-unsigned char find_median(unsigned char *dataset, unsigned char len);
-
-/**
- * @brief Calculates the mean value
- *
- * Given an array of data and a length, returns the mean
- *
- * @param dataset Input data vector
- * @param len Nr of element of data vector
- *
- * @return The mean value
- */
-unsigned char find_mean(unsigned char *dataset, unsigned char len);
-
-/**
- * @brief Calculates the maximum value
- *
- * Given an array of data and a length, returns the maximum
- *
- * @param dataset Input data vector
- * @param len Nr of element of data vector
- *
- * @return The maximum value
- */
-unsigned char find_maximum(unsigned char *dataset, unsigned char len);
-
-/**
- * @brief Calculates the minimum value
- *
- * Given an array of data and a length, returns the minimum
- *
- * @param dataset Input data vector
- * @param len Nr of element of data vector
- *
- * @return The minimum value
- */
-unsigned char find_minimum(unsigned char *dataset, unsigned char len);
-
-/**
- * @brief Sorts the array from largest to smallest
- *
- * Given an array of data and a length, , sorts the array from largest to smallest. 
- * (The zeroth Element will be the largest value, and the last element (n-1) will be the smallest value. )
- *
- * @param dataset Input data vector
- * @param len Nr of element of data vector
- *
- * @return The minimum value
- */
-ReturnValue_e sort_array(unsigned char *dataset, unsigned char len);
-
-/**
- * @brief Swap 2 the content of provided pointers
- *
- * @param xp Pointer to a data
- * @param yp Pointer to a data
+ * @brief function to run course1 materials
+ * 
+ * This function calls some various simple tests that you can run to test 
+ * your code for the course 1 final assesment. The contents of these functions
+ * have been provided. 
  *
  * @return void
  */
-void swap(unsigned char *xp, unsigned char *yp);
+void course1(void);
 
-#endif /* __STATS_H__ */
+/**
+ * @brief function to run course1 data operations
+ * 
+ * This function calls the my_itoa and my_atoi functions to validate they
+ * work as expected for hexadecimal numbers.
+ *
+ * @return void
+ */
+int8_t test_data1();
+
+/**
+ * @brief function to run course1 data operations
+ * 
+ * This function calls the my_itoa and my_atoi functions to validate they
+ * work as expected for decimal numbers. 
+ *
+ * @return void
+ */
+int8_t test_data2();
+
+/**
+ * @brief function to test the non-overlapped memmove operation
+ * 
+ * This function calls the memmove routine with two sets of data that do not
+ * over lap in anyway. This function should print that a move worked correctly
+ * for a move from source to destination.
+ *
+ * @return void
+ */
+int8_t test_memmove1();
+
+/**
+ * @brief function to test an overlapped Memmove operation Part 1
+ * 
+ * This function calls the memmove routine with two sets of data that not
+ * over lap. Overlap exists at the start of the destination and the end of the
+ * source pointers. This function should print that a move worked correctly
+ * for a move from source to destination regardless of overlap.
+ *
+ * @return void
+ */
+int8_t test_memmove2();
+
+/**
+ * @brief function to run course1 memmove overlapped test
+ * 
+ * This function calls the memmove routine with two sets of data that not
+ * over lap. Overlap exists at the start of the source and the end of the
+ * destination pointers. This function should print that a move worked correctly
+ * for a move from source to destination regardless of overlap.
+ *
+ * @return void
+ */
+int8_t test_memmove3();
+
+/**
+ * @brief function to test the memcopy functionality
+ * 
+ * This function calls the my_memcopy functions to validate a copy works
+ * correctly. 
+ *
+ * @return void
+ */
+int8_t test_memcopy();
+
+/**
+ * @brief function to test the memset and memzero functionality
+ * 
+ * This function calls the memset and memzero functions. This shoudl zero out
+ * the bytes from [] to []. This should set the bytes [] to [] with 0xFF.
+ *
+ * @return void
+ */
+int8_t test_memset();
+
+/**
+ * @brief function to test the reverse functionality
+ * 
+ * This function calls the my_reverse function to see if a give set of ASCII
+ * characters will properly reverse.
+ *
+ * @return void
+ */
+int8_t test_reverse();
+
+#endif /* __COURSE1_H__ */
 

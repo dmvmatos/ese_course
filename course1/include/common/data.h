@@ -17,111 +17,35 @@
  * @date 11/03/2018
  *
  */
-#ifndef __STATS_H__
-#define __STATS_H__
+#ifndef __DATA_H__
+#define __DATA_H__
 
-/* Add Your Declarations and Function Comments here */ 
-
-typedef enum Return{
-    Ok = 0,
-    NotOk = 1
-}ReturnValue_e;
-
+#include <stdint.h>
+#include <stdbool.h>
+#include <math.h>
+#include "memory.h"
 
 /**
- * @brief A function that prints the statistics of an array
+ * @brief Convert data from a standard integer type into an ASCII string
  *
- * Prints the statistics of an array including minimum, maximum, mean, and median.
+ * @param data Integer value
+ * @param ptr Converted character string
+ * @param base Base to convert to (support bases 2 to 16)
  *
- * @param dataset Input data vector
- * @param len Nr of element of data vector
- *
- * @return General return information (Ok, Not Ok)
+ * @return Length of the converted data (including a negative sign)
  */
-ReturnValue_e print_statistics(unsigned char *dataset, unsigned char len);
+uint8_t my_itoa(int32_t data, uint8_t * ptr, uint32_t base);
 
 /**
- * @brief Prints the array to the screen
+ * @brief Convert data back from an ASCII represented string into an integer type
  *
- * Given an array of data and a length, prints the array to the screen
+ * @param ptr Converted character string
+ * @param digits Length of the converted data (including a negative sign)
+ * @param base Base of converted data (support bases 2 to 16)
  *
- * @param dataset Input data vector
- * @param len Nr of element of data vector
- *
- * @return General return information (Ok, Not Ok)
+ * @return Integer value
  */
-ReturnValue_e print_array(unsigned char *dataset, unsigned char len);
+int32_t my_atoi(uint8_t * ptr, uint8_t digits, uint32_t base);
 
-/**
- * @brief Calculates the median value
- *
- * Given an array of data and a length, returns the median value
- *
- * @param dataset Input data vector
- * @param len Nr of element of data vector
- *
- * @return The median value
- */
-unsigned char find_median(unsigned char *dataset, unsigned char len);
-
-/**
- * @brief Calculates the mean value
- *
- * Given an array of data and a length, returns the mean
- *
- * @param dataset Input data vector
- * @param len Nr of element of data vector
- *
- * @return The mean value
- */
-unsigned char find_mean(unsigned char *dataset, unsigned char len);
-
-/**
- * @brief Calculates the maximum value
- *
- * Given an array of data and a length, returns the maximum
- *
- * @param dataset Input data vector
- * @param len Nr of element of data vector
- *
- * @return The maximum value
- */
-unsigned char find_maximum(unsigned char *dataset, unsigned char len);
-
-/**
- * @brief Calculates the minimum value
- *
- * Given an array of data and a length, returns the minimum
- *
- * @param dataset Input data vector
- * @param len Nr of element of data vector
- *
- * @return The minimum value
- */
-unsigned char find_minimum(unsigned char *dataset, unsigned char len);
-
-/**
- * @brief Sorts the array from largest to smallest
- *
- * Given an array of data and a length, , sorts the array from largest to smallest. 
- * (The zeroth Element will be the largest value, and the last element (n-1) will be the smallest value. )
- *
- * @param dataset Input data vector
- * @param len Nr of element of data vector
- *
- * @return The minimum value
- */
-ReturnValue_e sort_array(unsigned char *dataset, unsigned char len);
-
-/**
- * @brief Swap 2 the content of provided pointers
- *
- * @param xp Pointer to a data
- * @param yp Pointer to a data
- *
- * @return void
- */
-void swap(unsigned char *xp, unsigned char *yp);
-
-#endif /* __STATS_H__ */
+#endif /* __DATA_H__ */
 

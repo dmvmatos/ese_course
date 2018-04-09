@@ -23,11 +23,12 @@
 
 
 #include <stdio.h>
-#include "stats.h"
+#include "../include/common/stats.h"
 
 /* Size of the Data Set */
 #define SIZE (40)
 
+#ifdef C1M1
 void main() {
 
   unsigned char test[SIZE] = { 34, 201, 190, 154,   8, 194,   2,   6,
@@ -66,9 +67,10 @@ void main() {
   print_statistics(test, SIZE);
 
 }
+#endif
 
 ReturnValue_e print_statistics(unsigned char *dataset, unsigned char len){
-  ReturnValue_e ReturnValue = NotOk;
+  ReturnValue_e ReturnValue = Ok;
   unsigned char maximum = 0;
   unsigned char minimum = 0;
   unsigned char mean = 0;
@@ -86,7 +88,7 @@ ReturnValue_e print_statistics(unsigned char *dataset, unsigned char len){
   median = find_median(dataset, SIZE);
   printf("Median value : %d \n",  median);
 
-  return Ok;
+  return ReturnValue;
 }
 
 ReturnValue_e print_array(unsigned char *dataset, unsigned char len){
@@ -97,13 +99,16 @@ ReturnValue_e print_array(unsigned char *dataset, unsigned char len){
 
   if(dataset!=NULL && len!=0){
     for (i=0; i < len; i++){
-      printf("%d ", *dataset);
+#ifdef VERBOSE
+      PRINTF("%d ", *dataset);
+#endif
       dataset++;
       }
       ReturnValue = Ok;
   }
-  
-  printf("\n");
+#ifdef VERBOSE
+  PRINTF("\n");
+#endif
   return ReturnValue;
 }
 

@@ -33,8 +33,11 @@ include sources.mk
 # Platform Overrides
 PLATFORM = HOST
 
+# Additional compile switch
+COMPILER_SWITCHES = -DCOURSE1 -DVERBOSE
+
 # Platform Specific Flags
-LINKER_FILE = ../msp432p401r.lds
+LINKER_FILE = msp432p401r.lds
 
 # Architectures Specific Flags
 CPU = cortex-m4
@@ -48,21 +51,22 @@ ifeq ($(PLATFORM),MSP432)
 	CC = arm-none-eabi-gcc
 	LD = arm-none-eabi-ld
 	SIZE-TOOL = arm-none-eabi-size
-        LDFLAGS = -T $(LINKER_FILE)
-        CFLAGS = -mcpu=$(CPU) -m$(ARCH) -march=$(MARCH) -mfloat-abi=$(MFLOAT) -mfpu=$(MFPU) --specs=$(SPECS)
+	LDFLAGS = -T $(LINKER_FILE)
+	CPPFLAGS = -mcpu=$(CPU) -m$(ARCH) -march=$(MARCH) -mfloat-abi=$(MFLOAT) -mfpu=$(MFPU) --specs=$(SPECS)	
+	CFLAGS = --specs=$(SPECS)	  
 else
 	CC = gcc
 	SIZE-TOOL = size
 endif
 
 #Executable output file
-TARGET = c1m2
+TARGET = course1
 
 # Compiler Flags
 LDFLAGS += -Wl,-Map=$(TARGET).map
-CFLAGS += -Wall -Werror -g -O0 -std=c99 -D$(PLATFORM)
-CPPFLAGS = -E -MD -MP -D$(PLATFORM)
-ASFLAGS = -S -D$(PLATFORM)
+CFLAGS += -Wall -Werror -g -O0 -std=c99 -D$(PLATFORM) $(COMPILER_SWITCHES)
+CPPFLAGS = -E -MD -MP -D$(PLATFORM) $(COMPILER_SWITCHES)
+ASFLAGS = -S -D$(PLATFORsM) $(COMPILER_SWITCHES)
 
 %.i : %.c
 	$(CC) $(CPPFLAGS) -o $*.i $*.c
@@ -83,9 +87,8 @@ compile-all: $(OBJS)
 build: $(TARGET).out
 
 $(TARGET).out: $(OBJS)
-	$(CC) $(OBJS) $(CFLAGS) $(LDFLAGS) -o $@
+	$(CC) $(OBJS) -lm $(CFLAGS) $(LDFLAGS) -o $@
 	$(SIZE-TOOL) -Atd $@
-	#objdump -S $@
 
 
 CPPS = $(SOURCES:.c=.i)
